@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'python:3.11-slim'
-            reuseNode true
+            image 'selenium/standalone-chrome:latest'
+            args '--shm-size=2g'
         }
     }
 
