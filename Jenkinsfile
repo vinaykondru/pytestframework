@@ -17,7 +17,7 @@ pipeline {
                 which python
                 python -m pip install --upgrade pip --no-cache-dir
                 pip install -r requirements.txt
-                pytest tests/ --html=report.html
+                pytest
                 '''
             }
         }
