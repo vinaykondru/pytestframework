@@ -6,6 +6,8 @@ pipeline {
         }
     }
 
+    stages {
+
         stage('Install Dependencies') {
             steps {
                 sh '''
