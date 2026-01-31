@@ -14,6 +14,7 @@ pipeline {
                 python --version
                 python -m venv venv
                 . venv/bin/activate
+                which python
                 python -m pip install --upgrade pip --no-cache-dir
                 pip install -r requirements.txt
                 '''
