@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.11-slim'
-
+            reuseNode true
         }
     }
 
@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/your-org/automation-framework.git'
+                    url: 'https://github.com/vinaykondru/pytestframework.git'
             }
         }
 
