@@ -1,11 +1,8 @@
 import datetime
 import os
-
-import allure
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-
 @pytest.fixture(scope="class")
 def browser_setup(request):
     chrome_options = Options()
