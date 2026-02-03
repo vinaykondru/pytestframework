@@ -1,28 +1,23 @@
 pipeline {
-    agent {
-        docker {
-            image 'selenium/standalone-chrome:latest'
-            args '--shm-size=2g'
-        }
-    }
+    agent any
 
     stages {
-
-        stage('Install Dependencies') {
+        stage('Hello') {
             steps {
-                sh '''
-                python --version
-                python -m venv venv
-                . venv/bin/activate
-                which python
-                python -m pip install --upgrade pip --no-cache-dir
-                pip install -r requirements.txt
-                pytest
-                '''
+                checkout scmGit(branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vinaykondru/pytestframework.git']])
             }
         }
+        stage('Build') {
+            steps {
+                sh '''python3 --version
+python3 -m pip install --upgrade pip
+python3 -m pip install pytest
+python3 -m pip install pytest selenium
+python3 -m pip install webdriver-manager
+python3 -m pytest tests
 
+                    '''
+            }
+        }
     }
-
-
 }
