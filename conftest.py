@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import allure
 @pytest.fixture(scope="class")
-def browser_setup(request):
+def browser_setup(request,config):
     chrome_options = Options()
     # chrome_options.add_argument("--headless")
     # chrome_options.add_argument("--disable-gpu")
@@ -16,6 +16,7 @@ def browser_setup(request):
     driver = webdriver.Chrome(service=service, options=chrome_options)
     # driver = webdriver.Chrome(options=chrome_options)
     driver.maximize_window()
+    driver.get(config["base_url"])
     request.cls.driver = driver
     yield
     driver.quit()
@@ -38,4 +39,19 @@ def pytest_runtest_makereport(item, call):
                 name="Failure Screenshot",
                 attachment_type=allure.attachment_type.PNG
             )
+
+from utils.config_reader import load_config
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--env",
+        action="store",
+        default="dev",
+        help="Environment to run tests against"
+    )
+
+@pytest.fixture(scope="session")
+def config(request):
+    env = request.config.getoption("--env")
+    return load_config(env)
 
