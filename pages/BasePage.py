@@ -15,3 +15,5 @@ class BasePage:
     def dynamic_wait_type(self,locator,data):
         return self.wait.until(EC.visibility_of_element_located(locator)).send_keys(data)
 
+    def get_text(self,locator):
+         return self.driver.find_element(*locator).text
