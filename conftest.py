@@ -1,3 +1,43 @@
+"""
+conftest.py
+
+This file contains shared pytest fixtures and command-line options used across the framework.
+
+Fixtures included:
+
+1) setup_env (session scope)
+   - Loads environment-specific .env file
+   - Controlled via: --env=qa/dev/prod
+
+2) browser_setup (class scope)
+   - Initializes Selenium WebDriver
+   - Supports headless execution
+   - Controlled via: --headless
+
+3) pytest_runtest_makereport
+    - On failure attaches screenshot on allure report
+
+4) config
+    - Loads data based on environment data in YAML files
+    - Controlled via: --env=qa/dev/prod
+
+5) setup_env
+    - Loads environment-specific .env file
+    - Controlled via: --env=qa/dev/prod
+Command Line Options:
+---------------------
+--env        → Select environment (default: qa)
+--headless   → Run browser in headless mode
+
+Example runs:
+-------------
+pytest --env=qa
+pytest --env=dev --headless
+"""
+
+
+
+
 import datetime
 import os
 import pytest
@@ -6,12 +46,14 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import allure
+from utils.env_loader import load_env_file
 @pytest.fixture(scope="class")
 def browser_setup(request,config):
     chrome_options = Options()
-    # chrome_options.add_argument("--headless")
-    # chrome_options.add_argument("--disable-gpu")
-    # chrome_options.add_argument("--no-sandbox")
+    if "headless":
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     # driver = webdriver.Chrome(options=chrome_options)
@@ -49,9 +91,19 @@ def pytest_addoption(parser):
         default="dev",
         help="Environment to run tests against"
     )
+    parser.addoption(
+        "--headless",
+        action="store_true",
+        default=True,
+        help="Run tests in headless mode"
+    )
 
 @pytest.fixture(scope="session")
 def config(request):
     env = request.config.getoption("--env")
     return load_config(env)
 
+@pytest.fixture(scope="session", autouse=True)
+def setup_env(request):
+    env_name = request.config.getoption("--env")
+    return load_env_file(env_name)

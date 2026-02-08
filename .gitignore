@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+env/
+
+# Logs
+*.log
+
+# Allure reports
+allure-results/
+allure-report/
+
+# OS files
+.DS_Store
+
+# IDE files
+.vscode/
+.idea/
+
+# Environment secrets
+.env
+.env.*
+secrets/.env.*
+
+# Driver binaries (optional)
+chromedriver
+geckodriver

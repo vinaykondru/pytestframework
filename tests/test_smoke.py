@@ -8,19 +8,22 @@ from pages.LoginPage import LoginPage
 from pages.InventoryPage import InventoryPage
 from selenium.webdriver.support import expected_conditions as EC
 from config.data_reader import read_csv
+from utils.env_loader import get_secret
+
 
 @pytest.mark.usefixtures("browser_setup")
 class TestSmoke:
     data = read_csv("uat_data.csv")
-    @pytest.mark.parametrize("user", data)
-    def test_login(self,user,config):
-        print(config["username"])
+    def test_login(self):
+        username = get_secret("LOGIN_USERNAME")
+        password = get_secret("LOGIN_PASSWORD")
         login_page = LoginPage(self.driver)
-        login_page.enter_username(LoginPage.username,config["username"])
-        login_page.enter_password(LoginPage.password,config["password"])
+        login_page.enter_username(LoginPage.username,username)
+        login_page.enter_password(LoginPage.password,password)
         login_page.click_login(LoginPage.login_button)
         base_page = BasePage(self.driver)
-        productText = base_page.get_text(InventoryPage.products_text)
+        inventory_page = InventoryPage(self.driver)
+        productText = base_page.get_text(inventory_page.products_text)
         assert productText == "Products"
         assert self.driver.find_element(By.CLASS_NAME,"app_logo").is_displayed()
         # self.driver.quit()

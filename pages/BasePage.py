@@ -16,4 +16,4 @@ class BasePage:
         return self.wait.until(EC.visibility_of_element_located(locator)).send_keys(data)
 
     def get_text(self,locator):
-         return self.driver.find_element(*locator).text
+         return self.wait.until(EC.visibility_of_element_located(locator)).text
